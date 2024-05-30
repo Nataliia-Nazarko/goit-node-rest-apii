@@ -39,7 +39,7 @@ contactsRouter.put(
 contactsRouter.delete("/:id", isValidId, contactsControllers.deleteContact);
 
 contactsRouter.patch(
-  "/:contactId/favorite",
+  "/:id/favorite",
   isValidContactId,
   isEmptyBody,
   validateBody(updateStatusContactSchema),
