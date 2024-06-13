@@ -12,7 +12,6 @@ import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import HttpError from "../helpers/HttpError.js";
 
 import { createToken } from "../helpers/jwt.js";
-import sendEmail from "../helpers/sendEmail.js";
 
 const avatarsPath = path.resolve("public", "avatars");
 
