@@ -1,7 +1,6 @@
-import { nanoid } from "nanoid";
 import fs from "fs/promises";
 import path from "path";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import gravatar from "gravatar";
 import Jimp from "jimp";
 
@@ -23,24 +22,8 @@ const register = async (req, res) => {
     throw HttpError(409, "Email in use");
   }
 
-  const verificationToken = nanoid();
-  const avatarURL = gravatar.url(email, { protocol: "http" });
-
-  const newUser = await authServices.saveUser({
-    ...req.body,
-    verificationToken,
-    avatarURL,
-  });
-
-  const verifyEmail = {
-    to: "tkachenko.city@gmail.com",
-    from: "tkachenko_kateryna@meta.ua",
-    subject: "First email by Node.js",
-    text: "and easy to do anywhere, even with Node.js",
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify your Email</a>`,
-  };
-
-  await sendEmail(verifyEmail);
+  const avatarURL = gravatar.url(email, { protocol: "https" });
+  const newUser = await authServices.saveUser({ ...req.body, avatarURL });
 
   res.status(201).json({
     user: {
@@ -51,60 +34,11 @@ const register = async (req, res) => {
   });
 };
 
-const verify = async (req, res) => {
-  const { verificationToken } = req.params;
-
-  const user = await authServices.findUser({ verificationToken });
-
-  if (!user) {
-    throw HttpError(404, "User not found");
-  }
-
-  await authServices.updateUser(
-    { _id: user._id },
-    { verify: true, verificationToken: null }
-  );
-
-  res.status(200).json({ message: "Verification successful" });
-};
-
-const resendVerify = async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    throw HttpError(400, "missing required field email");
-  }
-
-  const user = await authServices.findUser({ email });
-  if (!user) {
-    throw HttpError(404, "Email not found");
-  }
-
-  if (user.verify) {
-    throw HttpError(400, "Verification has already been passed");
-  }
-
-  const verifyEmail = {
-    to: "tkachenko.city@gmail.com",
-    from: "tkachenko_kateryna@meta.ua",
-    subject: "First email by Node.js",
-    text: "and easy to do anywhere, even with Node.js",
-    html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify your Email</a>`,
-  };
-
-  await sendEmail(verifyEmail);
-
-  res.status(200).json({ message: "Verification email sent" });
-};
-
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await authServices.findUser({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
-  }
-
-  if (!user.verify) {
-    throw HttpError(401, "User not verify");
   }
 
   const compareResult = await bcrypt.compare(password, user.password);
@@ -197,8 +131,6 @@ const updateAvatar = async (req, res) => {
 
 export default {
   register: ctrlWrapper(register),
-  verify: ctrlWrapper(verify),
-  resendVerify: ctrlWrapper(resendVerify),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
