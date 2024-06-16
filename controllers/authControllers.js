@@ -35,7 +35,7 @@ const register = async (req, res) => {
 
   const verifyEmail = {
     to: "nataliianazarko@gmail.com",
-    from: "nataliianazarko@meta.ua",
+    from: "demchuk.volodymyr@lnu.edu.ua",
     subject: "First email by Node.js",
     text: "and easy to do anywhere, even with Node.js",
     html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify your Email</a>`,
@@ -86,7 +86,7 @@ const resendVerify = async (req, res) => {
 
   const verifyEmail = {
     to: "nataliianazarko@gmail.com",
-    from: "nataliianazarko@meta.ua",
+    from: "demchuk.volodymyr@lnu.edu.ua",
     subject: "First email by Node.js",
     text: "and easy to do anywhere, even with Node.js",
     html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify your Email</a>`,
