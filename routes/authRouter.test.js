@@ -11,7 +11,7 @@ describe("test /api/users/login", () => {
 
   beforeAll(async () => {
     await mongoose.connect(DB_TEST_HOST);
-    server = app.listen(PORT);
+    server = app.listen(3000);
 
     await saveUser({
       email: "tk@gmail.com",

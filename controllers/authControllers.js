@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import fs from "fs/promises";
 import path from "path";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import gravatar from "gravatar";
 import Jimp from "jimp";
 
@@ -25,7 +25,7 @@ const register = async (req, res) => {
   }
 
   const verificationToken = nanoid();
-  const avatarURL = gravatar.url(email, { protocol: "https" });
+  const avatarURL = gravatar.url(email, { protocol: "http" });
 
   const newUser = await authServices.saveUser({
     ...req.body,
@@ -34,8 +34,8 @@ const register = async (req, res) => {
   });
 
   const verifyEmail = {
-    to: "tkachenko.city@gmail.com",
-    from: "tkachenko_kateryna@meta.ua",
+    to: "nataliianazarko@gmail.com",
+    from: "nataliianazarko@meta.ua",
     subject: "First email by Node.js",
     text: "and easy to do anywhere, even with Node.js",
     html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify your Email</a>`,
@@ -85,8 +85,8 @@ const resendVerify = async (req, res) => {
   }
 
   const verifyEmail = {
-    to: "tkachenko.city@gmail.com",
-    from: "tkachenko_kateryna@meta.ua",
+    to: "nataliianazarko@gmail.com",
+    from: "nataliianazarko@meta.ua",
     subject: "First email by Node.js",
     text: "and easy to do anywhere, even with Node.js",
     html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${user.verificationToken}">Click to verify your Email</a>`,
