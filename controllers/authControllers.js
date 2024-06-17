@@ -63,7 +63,7 @@ const verify = async (req, res) => {
 
   await authServices.updateUser(
     { _id: user._id },
-    { verify: true, verificationToken: null }
+    { verify: true, verificationToken: " " }
   );
 
   res.status(200).json({ message: "Verification successful" });
